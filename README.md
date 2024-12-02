@@ -15,4 +15,5 @@ ZeKshop addresses the severe privacy issues in purchasing erotic merchandise by 
 ### ZeKshop circuits
 
 **The `verify_purchase` circuit**
+
 It get the purchase number, the sender and recipient email addresses from certain email's metadata and constraints that indeed the user(on the client-side) that inputs the email is the one that received the email better known as "spender of the funds for the purchase".
