@@ -1,8 +1,8 @@
-use zkemail::{KEY_LIMBS_2048, dkim::RSAPubkey};
-use dep::string_search::{StringBody, SubString128, SubString, SubString32, SubString64};
+use dep::string_search::{StringBody, SubString, SubString128, SubString32, SubString64};
+use dep::zkemail::{dkim::RSAPubkey, KEY_LIMBS_2048};
 
 global MAX_PARTIAL_EMAIL_BODY_LENGTH: u32 = 1216;
-global MAX_EMAIL_HEADER_LENGTH: u32 = 576;
+global MAX_EMAIL_HEADER_LENGTH: u32 = 1344;
 global MAX_EMAIL_ADDRESS_LENGTH: u32 = 60;
 global MAX_PURCHASE_NUMBER_LENGTH: u32 = 20;
 type StringBody1280 = StringBody<1302, 42, 1280>;
@@ -19,7 +19,7 @@ fn main(
     from_email_address: [u8; MAX_EMAIL_ADDRESS_LENGTH],
     from_email_address_length: u32,
     to_email_address: [u8; MAX_EMAIL_ADDRESS_LENGTH],
-    to_email_address_length: u32
+    to_email_address_length: u32,
 ) {
     verify_purchase(
         header,
@@ -32,7 +32,7 @@ fn main(
         from_email_address,
         from_email_address_length,
         to_email_address,
-        to_email_address_length
+        to_email_address_length,
     )
 }
 
@@ -47,7 +47,7 @@ fn verify_purchase(
     from_email_address: [u8; MAX_EMAIL_ADDRESS_LENGTH],
     from_email_address_length: u32,
     to_email_address: [u8; MAX_EMAIL_ADDRESS_LENGTH],
-    to_email_address_length: u32
+    to_email_address_length: u32,
 ) {
     // Check that the header's length is within bounds
     assert(header.len() <= MAX_EMAIL_HEADER_LENGTH);
@@ -63,22 +63,23 @@ fn verify_purchase(
         header,
         header_length,
         from_email_address,
-        from_email_address_length
+        from_email_address_length,
     );
     assert_email_address_in_header(
         header,
         header_length,
         to_email_address,
-        to_email_address_length
+        to_email_address_length,
     );
 }
 
 fn assert_purchase_number_in_body(
     haystack: StringBody1280,
     purchase_number: [u8; MAX_PURCHASE_NUMBER_LENGTH],
-    purchase_number_length: u32
+    purchase_number_length: u32,
 ) {
-    let purchase_number_substring: SubString128 = SubString::new(purchase_number, purchase_number_length);
+    let purchase_number_substring: SubString128 =
+        SubString::new(purchase_number, purchase_number_length);
     let (match_found2, _): (bool, u32) = haystack.substring_match(purchase_number_substring);
 
     assert(match_found2, "header does not contain this purchase number");
@@ -88,7 +89,7 @@ fn assert_email_address_in_header(
     header: BoundedVec<u8, MAX_EMAIL_HEADER_LENGTH>,
     header_length: u32,
     email_address: [u8; MAX_EMAIL_ADDRESS_LENGTH],
-    email_address_length: u32
+    email_address_length: u32,
 ) {
     let email_addr: SubString64 = SubString::new(email_address, email_address_length);
 

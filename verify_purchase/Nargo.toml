@@ -2,7 +2,7 @@
 name = "verify_purchase"
 type = "bin"
 authors = ["Nikolay Kostadinov <nikolaykostadinov21@gmail.com>"]
-compiler_version = ">=0.35.0"
+compiler_version = ">=1.0.0"
 
 [dependencies]
 string_search = { tag = "v0.3.3", git = "https://github.com/noir-lang/noir_string_search" }
